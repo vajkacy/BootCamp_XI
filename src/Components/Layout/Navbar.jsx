@@ -3,11 +3,13 @@ import { Link } from "react-router";
 
 export default function Navbar() {
   return (
-    <nav className="sticky top-0 z-50 w-full bg-white border-b border-gray-100 shadow-sm">
-      <div className="max-w-[1440px] mx-auto px-12 h-24 flex items-center justify-between">
+    <nav className="sticky top-0 z-50 w-full bg-[#F5F5F5] border-b border-gray-100 shadow-sm">
+      <div
+        className="max-w-360
+       mx-auto px-12 h-24 flex items-center justify-between"
+      >
         {/* LEFT: Logo */}
         <Link to="/" className="flex items-center gap-2">
-          {/* w-15/h-15 is 60px - great size for 1080p */}
           <div className="w-15 h-15 bg-[#534FFF] rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-100">
             <svg
               width="32"
