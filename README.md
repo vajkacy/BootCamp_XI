@@ -3,9 +3,9 @@ src/
 │ ├── Layout/
 │ │ ├── Header.jsx
 │ │ └── Footer.jsx
-│ ├── Dashboard/
-│ │ ├── Hero.jsx
-│ │ ├── CourseGrid.jsx
-│ │ └── ContinueLearningOverlay.jsx
-│ └── UI/
+│ ├── Home/ <-- Components specific to the Home page
+│ ├── MainHero.jsx
+│ ├── MainSection.jsx
+│
+│ └── Ui/
 │ └── CourseCard.jsx

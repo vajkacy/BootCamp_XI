@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Navbar from "./Components/Layout/Navbar";
 import Footer from "./Components/Layout/Footer";
-
+import MainSection from "./Components/Home/MainSection";
 function App() {
   return (
     <div className="flex flex-col min-h-screen">
@@ -9,9 +9,7 @@ function App() {
 
       {/* middle sectione */}
       <main className="grow">
-        <h1 className="text-3xl font-bold text-blue-600 p-10">
-          Tailwind is working!
-        </h1>
+        <MainSection />
       </main>
 
       <Footer />
