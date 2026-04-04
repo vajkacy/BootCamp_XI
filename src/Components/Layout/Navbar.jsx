@@ -1,19 +1,32 @@
+import { useState } from "react"; // Added this
 import { Sparkles } from "lucide-react";
 import { Link } from "react-router";
+import { Modal } from "../Ui/Modal";
+import AuthModal from "../Auth/AuthModal"; // Ensure path is correct
 
 export default function Navbar() {
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState("login"); // 'login' or 'signup'
+
+  const openLogin = () => {
+    setAuthMode("login");
+    setIsAuthModalOpen(true);
+  };
+
+  const openSignup = () => {
+    setAuthMode("signup");
+    setIsAuthModalOpen(true);
+  };
+
   return (
     <nav className="sticky top-0 z-50 w-full bg-[#F5F5F5] border-b border-gray-100 shadow-sm">
-      <div
-        className="max-w-360
-       mx-auto px-12 h-24 flex items-center justify-between"
-      >
+      <div className="max-w-360 mx-auto px-12 h-24 flex items-center justify-between">
         {/* LEFT: Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <div className="w-15 h-15 bg-[#534FFF] rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-100">
+          <div className="w-12 h-12 bg-[#534FFF] rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-100">
             <svg
-              width="32"
-              height="33"
+              width="24"
+              height="24"
               viewBox="0 0 32 33"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -27,6 +40,7 @@ export default function Navbar() {
               />
             </svg>
           </div>
+          <span className="text-xl font-bold text-[#1E1B4B]">Bootcamp</span>
         </Link>
 
         {/* RIGHT: Navigation & Auth */}
@@ -40,15 +54,29 @@ export default function Navbar() {
           </Link>
 
           <div className="flex items-center gap-4">
-            <button className="px-8 py-3 text-sm font-bold text-[#534FFF] border-2 border-[#534FFF] rounded-xl hover:bg-indigo-50 transition-all">
+            <button
+              className="px-8 py-3 text-sm font-bold text-[#534FFF] border-2 border-[#534FFF] rounded-xl hover:bg-indigo-50 transition-all"
+              onClick={openLogin}
+            >
               Log In
             </button>
-            <button className="px-8 py-3 text-sm font-bold text-white bg-[#534FFF] rounded-xl hover:bg-indigo-700 shadow-md shadow-indigo-100 transition-all">
+
+            <button
+              className="px-8 py-3 text-sm font-bold text-white bg-[#534FFF] rounded-xl hover:bg-indigo-700 shadow-md shadow-indigo-100 transition-all"
+              onClick={openSignup}
+            >
               Sign Up
             </button>
           </div>
         </div>
       </div>
+
+      {/* Shared Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        initialMode={authMode}
+      />
     </nav>
   );
 }

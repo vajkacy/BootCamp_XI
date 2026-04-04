@@ -36,7 +36,7 @@ const MainSection = () => {
     <section className="bg-[#F9F9FB] px-6 md:px-20 py-12">
       <div className="max-w-7xl mx-auto">
         {/* 1. Hero Section */}
-        <div className="w-full h-80 bg-gradient-to-r from-purple-500 to-pink-500 rounded-3xl mb-16 relative overflow-hidden flex items-center p-12 text-white">
+        <div className="w-full h-80 bg-linear-to-r from-purple-500 to-pink-500 rounded-3xl mb-16 relative overflow-hidden flex items-center p-12 text-white">
           <div className="max-w-lg z-10">
             <h2 className="text-4xl font-bold mb-4">
               Start learning something new today

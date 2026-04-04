@@ -7,10 +7,10 @@ const ProgressCard = ({ title, lecturer, rating, image, progress }) => {
       <img
         src={image}
         alt={title}
-        className="w-24 h-24 rounded-lg object-cover flex-shrink-0"
+        className="w-24 h-24 rounded-lg object-cover shrink-0"
       />
 
-      <div className="flex-grow flex flex-col justify-between">
+      <div className="grow flex flex-col justify-between">
         <div>
           <div className="flex justify-between items-start">
             <span className="text-[10px] text-gray-400 font-medium">
