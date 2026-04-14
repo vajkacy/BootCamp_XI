@@ -5,7 +5,7 @@ export const Modal = ({ isOpen, onClose, variant, children }) => {
 
   return (
     // 1. BACKDROP: Covers the whole screen
-    <div className="fixed inset-0 z-[100] flex bg-black/40 backdrop-blur-sm">
+    <div className="fixed inset-0 z-100 flex bg-black/40 backdrop-blur-sm">
       {/* 2. CLICK-AWAY: Invisible layer to catch clicks outside */}
       <div className="absolute inset-0" onClick={onClose}></div>
 
@@ -21,8 +21,8 @@ export const Modal = ({ isOpen, onClose, variant, children }) => {
         <div
           className={`bg-white shadow-2xl relative z-10 transition-all pointer-events-auto flex flex-col ${
             variant === "side"
-              ? "h-full w-[500px] rounded-l-3xl"
-              : "max-w-md w-full rounded-[32px] p-10"
+              ? "h-full w-125 rounded-l-3xl"
+              : "max-w-md w-full rounded-4xl p-10"
           }`}
         >
           {/* Close Button inside the box */}

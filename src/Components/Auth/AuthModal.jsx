@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Modal } from "../Ui/Modal";
+import useAuthActions from "../../Hooks/useAuthActions";
 
 const AuthModal = ({ isOpen, initialMode, onClose }) => {
+  const { handleLogin, handleRegister, loading, error } = useAuthActions();
   const [step, setStep] = useState(1);
   const [userData, setUserData] = useState({
     username: "",
@@ -10,7 +12,7 @@ const AuthModal = ({ isOpen, initialMode, onClose }) => {
     password_confirmation: "",
     avatar: "",
     fullName: "",
-    mobileNumber: "", // Fixed typo
+    mobileNumber: "",
     age: "",
   });
 
@@ -22,14 +24,18 @@ const AuthModal = ({ isOpen, initialMode, onClose }) => {
     setUserData({ ...userData, avatar: e.target.files[0] });
   };
 
-  const handleRegister = () => {
-    console.log("Registering...", userData);
-    // Add your FormData and API call logic here
+  const onLogInSubmit = () => {
+    console.log("login...", userData);
+    handleLogin({ email: userData.email, password: userData.password }, () =>
+      onClose(),
+    );
   };
 
-  const handlelogin = () => {
-    console.log("login .... ", userData);
-    // Add your FormData and API call logic here
+  const onRegisterSubmit = () => {
+    handleRegister(userData, () => {
+      setStep(1); // Reset steps for next time
+      onClose();
+    });
   };
 
   if (!isOpen) return null;
@@ -59,7 +65,7 @@ const AuthModal = ({ isOpen, initialMode, onClose }) => {
           />
           <button
             className="bg-[#534FFF] text-white p-3 rounded-xl font-bold hover:bg-indigo-700"
-            onClick={handlelogin}
+            onClick={onLogInSubmit}
           >
             Login
           </button>
@@ -135,7 +141,7 @@ const AuthModal = ({ isOpen, initialMode, onClose }) => {
                 />
               </div>
               <button
-                onClick={handleRegister}
+                onClick={onRegisterSubmit}
                 className="bg-[#534FFF] text-white p-3 rounded-xl font-bold"
               >
                 Register Now
