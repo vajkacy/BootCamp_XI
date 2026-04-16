@@ -1,14 +1,35 @@
-import { Sparkles } from "lucide-react";
+import { useState } from "react"; // Added this
+import { Sparkles, BookOpen, User } from "lucide-react";
 import { Link } from "react-router";
+import { Modal } from "../Ui/Modal";
+import AuthModal from "../Auth/AuthModal"; // Ensure path is correct
+import { useAuth } from "../../Context/AuthContext";
+import ProfileModal from "../Auth/ProfileModal";
+import EnrolledSidebar from "./EnrolledSidebar";
 
 export default function Navbar() {
+  const { isLoggedIn, logOut, user } = useAuth();
+  const [isSideBarOpen, setIsSideBarOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState("login"); // 'login' or 'signup'
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
+  const openLogin = () => {
+    setAuthMode("login");
+    setIsAuthModalOpen(true);
+  };
+
+  const openSignup = () => {
+    setAuthMode("signup");
+    setIsAuthModalOpen(true);
+  };
+
   return (
-    <nav className="sticky top-0 z-50 w-full bg-white border-b border-gray-100 shadow-sm">
-      <div className="max-w-[1440px] mx-auto px-12 h-24 flex items-center justify-between">
+    <nav className="sticky top-0 z-50 w-full bg-[#F5F5F5] border-b border-gray-100 shadow-sm">
+      <div className="max-w-360 mx-auto px-12 h-24 flex items-center justify-between">
         {/* LEFT: Logo */}
         <Link to="/" className="flex items-center gap-2">
-          {/* w-15/h-15 is 60px - great size for 1080p */}
-          <div className="w-15 h-15 bg-[#534FFF] rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-100">
+          <div className="w-12 h-12 bg-[#534FFF] rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-100">
             <svg
               width="32"
               height="33"
@@ -25,28 +46,82 @@ export default function Navbar() {
               />
             </svg>
           </div>
+          <span className="text-xl font-bold text-[#1E1B4B]">Bootcamp</span>
         </Link>
 
         {/* RIGHT: Navigation & Auth */}
         <div className="flex items-center gap-10">
           <Link
-            to="/courses"
+            to="/browse"
             className="flex items-center gap-2 text-gray-600 hover:text-[#534FFF] transition-colors font-medium"
           >
             <Sparkles size={20} />
             <span>Browse Courses</span>
           </Link>
 
-          <div className="flex items-center gap-4">
-            <button className="px-8 py-3 text-sm font-bold text-[#534FFF] border-2 border-[#534FFF] rounded-xl hover:bg-indigo-50 transition-all">
-              Log In
-            </button>
-            <button className="px-8 py-3 text-sm font-bold text-white bg-[#534FFF] rounded-xl hover:bg-indigo-700 shadow-md shadow-indigo-100 transition-all">
-              Sign Up
-            </button>
-          </div>
+          {isLoggedIn ? (
+            /* --- LOGGED IN STATE --- */
+            <div className="flex items-center gap-8">
+              <button
+                className="flex items-center gap-2 text-gray-600 hover:text-[#534FFF] transition-colors font-medium"
+                onClick={() => setIsSideBarOpen(true)}
+              >
+                <BookOpen size={20} />
+                <span>Enrolled Courses</span>
+              </button>
+
+              <div
+                className="relative cursor-pointer"
+                onClick={() => setIsProfileModalOpen(true)}
+              >
+                {user?.avatar ? (
+                  <img
+                    src={user.avatar}
+                    className="w-12 h-12 rounded-full border-2 border-gray-100 object-cover"
+                    alt="profile"
+                  />
+                ) : (
+                  <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
+                    <User size={24} className="text-[#534FFF]" />
+                  </div>
+                )}
+                {/* Online indicator dot */}
+                <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-orange-400 border-2 border-white rounded-full"></div>
+              </div>
+            </div>
+          ) : (
+            /* --- LOGGED OUT STATE --- */
+            <div className="flex items-center gap-4">
+              <button
+                className="px-8 py-3 text-sm font-bold text-[#534FFF] border-2 border-[#534FFF] rounded-xl hover:bg-indigo-50 transition-all"
+                onClick={openLogin}
+              >
+                Log In
+              </button>
+              <button
+                className="px-8 py-3 text-sm font-bold text-white bg-[#534FFF] rounded-xl hover:bg-indigo-700 shadow-md shadow-indigo-100 transition-all"
+                onClick={openSignup}
+              >
+                Sign Up
+              </button>
+            </div>
+          )}
         </div>
       </div>
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        initialMode={authMode}
+      />
+      <ProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+      />
+      <EnrolledSidebar
+        isOpen={isSideBarOpen}
+        onClose={() => setIsSideBarOpen(false)}
+      />
     </nav>
   );
 }

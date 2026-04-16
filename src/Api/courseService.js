@@ -1,0 +1,106 @@
+import API from "./axiosInstance";
+
+/**
+ * COURSES & ENROLLMENTS
+ */
+
+// )
+export const getCourses = async (filters = {}) => {
+  // We format the params exactly as Swagger showed us
+  const params = {
+    search: filters.search || undefined,
+    // Swagger uses bracket notation for arrays: categories[], topics[], instructors[]
+    "categories[]":
+      filters.categories?.length > 0 ? filters.categories : undefined,
+    "topics[]": filters.topics?.length > 0 ? filters.topics : undefined,
+    "instructors[]":
+      filters.instructors?.length > 0 ? filters.instructors : undefined,
+    sort: filters.sort || "newest",
+    page: filters.page || 1,
+  };
+
+  // Remove any undefined values so we don't send messy empty params
+  const cleanParams = Object.fromEntries(
+    Object.entries(params).filter(([_, value]) => value !== undefined),
+  );
+
+  const response = await API.get("/courses", { params: cleanParams });
+  return response;
+};
+
+// Get featured courses (Matches Swagger: /courses/featured)
+export const getFeaturedCourses = async () => {
+  const response = await API.get("/courses/featured");
+  return response.data;
+};
+
+// Get in-progress courses (Progress < 100)
+export const getProgress = async () => {
+  const response = await API.get("/courses/in-progress");
+  return response.data;
+};
+
+// Get single course by ID (Includes enrollment info if authenticated)
+export const getCoursesById = async (id) => {
+  const response = await API.get(`/courses/${id}`);
+  return response.data; // Crucial: needed to return the data!
+};
+
+// Get all enrollments for the authenticated user (For your Sidebar)
+export const getEnrollments = async () => {
+  const response = await API.get("/enrollments");
+  return response.data;
+};
+
+// Step 1: Get Weekly Schedules
+export const getWeeklySchedules = async (courseId) => {
+  const response = await API.get(`/courses/${courseId}/weekly-schedules`);
+  return response.data; // Return the data so your component can use it
+};
+
+// Step 2: Get Time Slots (Needs schedule_id)
+export const getTimeSlots = async (courseId, scheduleId) => {
+  const response = await API.get(`/courses/${courseId}/time-slots`, {
+    params: { weekly_schedule_id: scheduleId },
+  });
+  return response.data;
+};
+
+// Step 3: Get Session Types (Needs schedule_id and time_slot_id)
+export const getSessionTypes = async (courseId, scheduleId, timeId) => {
+  const response = await API.get(`/courses/${courseId}/session-types`, {
+    params: {
+      weekly_schedule_id: scheduleId,
+      time_slot_id: timeId,
+    },
+  });
+  return response.data;
+};
+// Step 4: Submit the Enrollment
+
+export const enrollInCourse = async (payload) => {
+  const response = await API.post("/enrollments", payload);
+  return response.data;
+};
+/*
+ * FILTERS & METADATA
+
+ */
+
+// Inside courseService.js
+export const getAllCourses = async (queryParams) => {
+  // We will build a query string out of your selected filters
+  const response = await API.get("/courses", { params: queryParams });
+  return response; // Or response.data depending on your setup
+};
+
+export const getCategories = () =>
+  API.get("/categories").then((res) => res.data);
+
+export const getTopics = (categoryId) => {
+  const url = categoryId ? `/topics?category_id=${categoryId}` : "/topics";
+  return API.get(url).then((res) => res.data);
+};
+
+export const getInstructors = () =>
+  API.get("/instructors").then((res) => res.data);
