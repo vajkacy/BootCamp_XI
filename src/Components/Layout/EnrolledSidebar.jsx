@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { X, MapPin, Clock, Calendar, BookOpen } from "lucide-react";
 import { getEnrollments } from "../../Api/courseService";
 import useFetchCourses from "../../Hooks/useFetchCourses";
@@ -12,19 +12,25 @@ const EnrolledSidebar = ({ isOpen, onClose }) => {
     refetch,
   } = useFetchCourses(getEnrollments);
 
+  useEffect(() => {
+    if (isOpen && refetch) {
+      refetch();
+    }
+  }, [isOpen]); // It watches the isOpen prop
+
   if (!isOpen) return null;
 
   return (
     <>
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 bg-black/20 backdrop-blur-sm z-[60] transition-opacity ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        className={`fixed inset-0 bg-black/20 backdrop-blur-sm z-60 transition-opacity ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         onClick={onClose}
       />
 
       {/* Sidebar Panel */}
       <div
-        className={`fixed top-0 right-0 h-full w-[450px] bg-white shadow-2xl z-[70] transition-transform duration-300 transform ${isOpen ? "translate-x-0" : "translate-x-full"} overflow-y-auto p-6`}
+        className={`fixed top-0 right-0 h-full w-112.5 bg-white shadow-2xl z-70 transition-transform duration-300 transform ${isOpen ? "translate-x-0" : "translate-x-full"} overflow-y-auto p-6`}
       >
         <div className="flex justify-between items-center mb-8">
           <div>

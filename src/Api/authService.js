@@ -20,9 +20,13 @@ export const getProfile = async () => {
   return response.data;
 };
 
-// Accept 'profileData' so we can send Name, Age, and MobileNumber
-export const updateProfile = async (profileData) => {
-  const response = await API.put("/profile", profileData);
+export const updateProfile = async (formData) => {
+  const response = await API.put("/profile", formData, {
+    headers: {
+      // Axios will automatically set the correct boundary for multipart data
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return response.data;
 };
 

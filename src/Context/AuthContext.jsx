@@ -1,19 +1,32 @@
-import { createContext, useState, useContext, useMemo } from "react";
+import { createContext, useState, useContext, useMemo, useEffect } from "react";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // Use boolean false, not string "false"
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const [user, setUser] = useState({
-    FullName: "",
-    Email: "",
-    MobileNumber: "",
-    Age: null, // Use actual null
+  // 1. LAZY INITIALIZATION: Check localStorage FIRST before setting defaults.
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    const saved = localStorage.getItem("isLoggedIn");
+    return saved === "true"; // Converts string back to boolean
   });
 
-  // This will now correctly return false if Age is null or FullName is ""
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser
+      ? JSON.parse(savedUser)
+      : { FullName: "", Email: "", MobileNumber: "", Age: null };
+  });
+
+  // 2. AUTO-SAVE: Whenever isLoggedIn changes, save it to localStorage
+  useEffect(() => {
+    localStorage.setItem("isLoggedIn", isLoggedIn);
+  }, [isLoggedIn]);
+
+  // 3. AUTO-SAVE: Whenever user changes, save it to localStorage
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(user));
+  }, [user]);
+
+  // The rest of your code stays exactly the same!
   const isProfileComplete = useMemo(() => {
     return !!(user.FullName && user.Email && user.MobileNumber && user.Age);
   }, [user]);
@@ -23,6 +36,8 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setIsLoggedIn(false);
     setUser({ FullName: "", Email: "", MobileNumber: "", Age: null });
+    // Note: The useEffects above will automatically clear localStorage for you
+    // because they are watching these state changes!
   };
 
   const updateProfile = (newData) => {

@@ -34,13 +34,37 @@ export const getEnrollments = async () => {
   return response.data;
 };
 
-// Enroll in a new course
-export const enrollInCourse = async (courseId) => {
-  const response = await API.post("/enrollments", { course_id: courseId });
+// Step 1: Get Weekly Schedules
+export const getWeeklySchedules = async (courseId) => {
+  const response = await API.get(`/courses/${courseId}/weekly-schedules`);
+  return response.data; // Return the data so your component can use it
+};
+
+// Step 2: Get Time Slots (Needs schedule_id)
+export const getTimeSlots = async (courseId, scheduleId) => {
+  const response = await API.get(`/courses/${courseId}/time-slots`, {
+    params: { weekly_schedule_id: scheduleId },
+  });
   return response.data;
 };
 
-/**
+// Step 3: Get Session Types (Needs schedule_id and time_slot_id)
+export const getSessionTypes = async (courseId, scheduleId, timeId) => {
+  const response = await API.get(`/courses/${courseId}/session-types`, {
+    params: {
+      weekly_schedule_id: scheduleId,
+      time_slot_id: timeId,
+    },
+  });
+  return response.data;
+};
+// Step 4: Submit the Enrollment
+
+export const enrollInCourse = async (payload) => {
+  const response = await API.post("/enrollments", payload);
+  return response.data;
+};
+/*
  * FILTERS & METADATA
  */
 
