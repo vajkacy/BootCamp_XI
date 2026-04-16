@@ -3,6 +3,7 @@ import Navbar from "./Components/Layout/Navbar";
 import Footer from "./Components/Layout/Footer";
 import MainSection from "./Components/Home/MainSection";
 import CourseDetails from "./Components/Details/CourseDetails";
+import BrowseCourses from "./Components/Browse/BrowseCourses";
 
 function App() {
   return (
@@ -17,7 +18,10 @@ function App() {
           {/* Details Page */}
           <Route path="/courses/:id" element={<CourseDetails />} />
 
-          {/* You can add a 404 page here later */}
+          {/* Browse Page (Fixed Typo!) */}
+          <Route path="/browse" element={<BrowseCourses />} />
+
+          {/* 404 page here later */}
         </Routes>
       </main>
 

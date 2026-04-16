@@ -4,10 +4,28 @@ import API from "./axiosInstance";
  * COURSES & ENROLLMENTS
  */
 
-// Get all courses (supports pagination/filters in the future)
-export const getCourses = async () => {
-  const response = await API.get("/courses");
-  return response.data;
+// )
+export const getCourses = async (filters = {}) => {
+  // We format the params exactly as Swagger showed us
+  const params = {
+    search: filters.search || undefined,
+    // Swagger uses bracket notation for arrays: categories[], topics[], instructors[]
+    "categories[]":
+      filters.categories?.length > 0 ? filters.categories : undefined,
+    "topics[]": filters.topics?.length > 0 ? filters.topics : undefined,
+    "instructors[]":
+      filters.instructors?.length > 0 ? filters.instructors : undefined,
+    sort: filters.sort || "newest",
+    page: filters.page || 1,
+  };
+
+  // Remove any undefined values so we don't send messy empty params
+  const cleanParams = Object.fromEntries(
+    Object.entries(params).filter(([_, value]) => value !== undefined),
+  );
+
+  const response = await API.get("/courses", { params: cleanParams });
+  return response;
 };
 
 // Get featured courses (Matches Swagger: /courses/featured)
@@ -66,7 +84,15 @@ export const enrollInCourse = async (payload) => {
 };
 /*
  * FILTERS & METADATA
+
  */
+
+// Inside courseService.js
+export const getAllCourses = async (queryParams) => {
+  // We will build a query string out of your selected filters
+  const response = await API.get("/courses", { params: queryParams });
+  return response; // Or response.data depending on your setup
+};
 
 export const getCategories = () =>
   API.get("/categories").then((res) => res.data);

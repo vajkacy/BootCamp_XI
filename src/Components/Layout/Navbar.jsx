@@ -52,7 +52,7 @@ export default function Navbar() {
         {/* RIGHT: Navigation & Auth */}
         <div className="flex items-center gap-10">
           <Link
-            to="/courses"
+            to="/browse"
             className="flex items-center gap-2 text-gray-600 hover:text-[#534FFF] transition-colors font-medium"
           >
             <Sparkles size={20} />
